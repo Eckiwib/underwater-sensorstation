@@ -1,16 +1,12 @@
 import socket
-import os
 import time
-from random import randint
-import json
+
 
 buffer = 1024
 serverips = "Eckhards-PC", "EckhardsSchullaptop"
 port = 2106
 serverips_file = "serverips"
 sep = "=?sEp?="
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 try:
     sefile = open(serverips_file,"r")
@@ -30,56 +26,22 @@ except:
         sefile.write(f"{ip}{sep}")
     sefile.close()
 
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 def sendstring(string):
-        global s
-        try:
-            s.sendall(str(string).encode())
-        except:
-            connection = False
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            while connection == False:
-                for ip in serverips:
-                    try:
-                        s.connect((ip, port))
-                        connection = True
-                    except:
-                        time.sleep(0.5)
+        s.sendall(str(string).encode())
 
-def recvstring():
-    global s
-    try:
-        string = str(s.recv(buffer).decode())
-        return string
-    except:
-        connection = False
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        while connection == False:
-            for ip in serverips:
-                try:
-                    s.connect((ip, port))
-                    connection = True
-                except:
-                    time.sleep(0.5)
-        string = str(s.recv(buffer).decode())
-        return string
+s.connect(("EckhardsSchullaptop", port))
 
-def getwattemp():
-    return randint(0, 100)
-
-def getairtemp():
-    return randint(0, 100)
-
-def getparts():
-    return randint(0, 100)
+time.sleep(5)
 
 while True:
-    wattemp = getwattemp()
-    lufttemp = getairtemp()
-    parts = getparts()
-    sendstring(wattemp)
-    sendstring(lufttemp)
-    sendstring(parts)
-    print(wattemp)
-    print(lufttemp)
-    print(parts)
-    time.sleep(10)
+    s.sendall(str(20).encode())
+    time.sleep(0.1)
+    s.sendall(str(40).encode())
+    time.sleep(0.1)
+    s.sendall(str(60).encode())
+    time.sleep(0.1)
+    s.sendall(str(80).encode())
+    time.sleep(0.1)
+    time.sleep(5)
